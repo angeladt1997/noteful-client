@@ -22,20 +22,18 @@ export default class AddFolder extends React.Component {
 
 		static contextType = ApiContext;
 
-		handdleSubmit = (event) => {
+		handleSubmit = (event) => {
 			event.preventDefault();
 			const {folderInput} = this.state;
-		}
+			const folder = { name: folderInput.value}
 
-		const folder = { name: folderInput.value}
-
-		fetch(`${config.API_ENDPOINT`}/folders/`, {
-			method: 'POST'
+			fetch(`${config.API_ENDPOINT}/folders/`, {
+			method: 'POST',
+			body:
+				 JSON.stringify(folder),
 			headers: {
 				'content-type': 'application/json'
-			},
-
-			body: JSON.stringify(folder)
+			},		
 		})
 			.then(res => {
 				if(!res.ok)
@@ -49,9 +47,10 @@ export default class AddFolder extends React.Component {
 			.catch(error => {
 				console.error({error})
 			})
-
-		updateFolderName(newFolder) {
-			this.setState({folderInput {value: newFolder, touched: true}})
+		}
+		
+		updateFolderName(folderInput) {
+			this.setState({folderInput: {value: folderInput, touched: true}})
 		}
 
 		validateNewFolderName() {
