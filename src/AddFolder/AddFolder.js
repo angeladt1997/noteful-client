@@ -20,20 +20,18 @@ export default class AddFolder extends React.Component {
 
 		static contextType = ApiContext;
 
-		handdleSubmit = (event) => {
+		handleSubmit = (event) => {
 			event.preventDefault();
 			const {folderInput} = this.state;
-		}
+			const folder = { name: folderInput.value}
 
-		const folder = { name: folderInput.value}
-
-		fetch(`${config.API_ENDPOINT`}/folders/`, {
-			method: 'POST'
+			fetch(`${config.API_ENDPOINT}/folders/`, {
+			method: 'POST',
+			body:
+				 JSON.stringify(folder),
 			headers: {
 				'content-type': 'application/json'
-			},
-
-			body: JSON.stringify(folder)
+			},		
 		})
 			.then(res => {
 				if(!res.ok)
@@ -47,9 +45,10 @@ export default class AddFolder extends React.Component {
 			.catch(error => {
 				console.error({error})
 			})
-
-		updateFolderName(newFolder) {
-			this.setState({folderInput {value: newFolder, touched: true}})
+		}
+		
+		updateFolderName(folderInput) {
+			this.setState({folderInput: {value: folderInput, touched: true}})
 		}
 
 		validateNewFolderName() {
@@ -66,7 +65,8 @@ export default class AddFolder extends React.Component {
 			const newFolderError = this.validateNewFolderName();
 			return (
 				<div>
-					<form className="newFolder">
+					<h2>New Folder</h2>
+					<form className="newFolder" onSubmit={e => this.handleSubmit(e)}>
 						<div className="folder-name"> 
 							<label htmlFor="name"> Folder Name * </label>
 							<input type="text" className="folderEntry"
@@ -81,7 +81,7 @@ export default class AddFolder extends React.Component {
 			)
 		}
 	}
-}
+
 
 	//addNewFolder(newFolder) {
 		//	this.setState({newFolder : {value: newFolder}});
