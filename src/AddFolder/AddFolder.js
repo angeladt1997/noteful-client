@@ -10,27 +10,59 @@ import React from 'react';
 import './AddFolder.css';
 import config from '../config';
 import ApiContext from '../ApiContext';
+import ValidationError from '../ValidationError';
 
 export default class AddFolder extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state ={
-			newFolder: {
-				value: ' ',
+			folderInput: {value: '', touched: false}
+			}
+		}
+
+		static contextType = ApiContext;
+
+		handdleSubmit = (event) => {
+			event.preventDefault();
+			const {folderInput} = this.state;
+		}
+
+		const folder = { name: folderInput.value}
+
+		fetch(`${config.API_ENDPOINT`}/folders/`, {
+			method: 'POST'
+			headers: {
+				'content-type': 'application/json'
 			},
 
-		addNewFolder(newFolder) {
-			this.setState({newFolder : {value: newFolder}});
-		}
-		// handleSubmit(event) {
-		// 	event.preventDefault();
-		// 	const newFolder = event.folderEntryInput.current.value;
-		// }
+			body: JSON.stringify(folder)
+		})
+			.then(res => {
+				if(!res.ok)
+					return res.json().then(e => Promise.reject(e))
+				return res.json()
+			})
+			.then((data) => {
+				this.contect.AddFolder(data)
+				this.props.history.push(`/`)
+			})
+			.catch(error => {
+				console.error({error})
+			})
 
-		// handleDelete(eventTwo) {
-		// 	event.preventDefault();
-		// 	const noNewFolder = event.
-		// }
+		updateFolderName(newFolder) {
+			this.setState({folderInput {value: newFolder, touched: true}})
+		}
+
+		validateNewFolderName() {
+			const newFolderName = this.state.value.trim();
+			if(newFolder.length === 0) {
+				return "Name me, please!";
+			} else if (name.length <3) {
+				return "I'd like a longer name!"
+			}
+
+		}
 
 		// render() {
 		// 	return (
