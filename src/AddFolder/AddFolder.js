@@ -14,7 +14,7 @@ export default class AddFolder extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state ={
-			newFolderInput: {value: '', touched: false}
+			folderInput: {value: '', touched: false}
 			}
 		}
 
@@ -22,16 +22,18 @@ export default class AddFolder extends React.Component {
 
 		handdleSubmit = (event) => {
 			event.preventDefault();
-			const {newFolderInput} = this.state;
+			const {folderInput} = this.state;
 		}
 
-		const newFolder : { name: newFolderInput.value}
+		const folder = { name: folderInput.value}
 
 		fetch(`${config.API_ENDPOINT`}/folders/`, {
 			method: 'POST'
 			headers: {
 				'content-type': 'application/json'
-			}
+			},
+
+			body: JSON.stringify(folder)
 		})
 			.then(res => {
 				if(!res.ok)
@@ -47,7 +49,7 @@ export default class AddFolder extends React.Component {
 			})
 
 		updateFolderName(newFolder) {
-			this.setState({newFolderInput {value: newFolder, touched: true}})
+			this.setState({folderInput {value: newFolder, touched: true}})
 		}
 
 		validateNewFolderName() {
@@ -69,7 +71,7 @@ export default class AddFolder extends React.Component {
 							<label htmlFor="name"> Folder Name * </label>
 							<input type="text" className="folderEntry"
 							name="folderName" id="folderName" onChange={e => this.updateFolderName(e.target.value)} />
-							{this.state.newFolderInput.touched && (<ValidationError message={newFolderError} />)}
+							{this.state.folderInput.touched && (<ValidationError message={newFolderError} />)}
 							<button type="submit" className="newFolderAddButton" onClick={e => this.newFolder(e.target.calue)}> 
 							Add to Folders
 							</button>
