@@ -1,3 +1,5 @@
+'use strict';
+
 // Create a new component AddFolder that implements a form to capture 
 // the name of a new folder from the user. This form should submit the 
 // name of the new folder to the POST /folders endpoint on the server. 
@@ -30,24 +32,24 @@ export default class AddFolder extends React.Component {
 		// 	const noNewFolder = event.
 		// }
 
-		render() {
-			return (
-				<div>
-					<h2>Add Folder</h2>
-					<form className="newFolder">
-						<div className="folder-name"> 
-							<label htmlFor="name"> Folder Name * </label>
-							<input type="text" className="folderEntry"
-							name="folderName" id="folderName" ref={this.folderEntryInput} />
-							<button type="submit" className="newFolderAddButton" onClick={e => this.newFolder(e.target.calue)}> 
-							Add to Folders
-							</button>
-							<button type="delete" className="newFolderCancel">
-							Cancel Addition
-							</button>
-						</div>
-					</form>
-				</div>
-			)
-		}
+		// render() {
+		// 	return (
+		// 		<div>
+		// 			<h2>Add Folder</h2>
+		// 			<form className="newFolder">
+		// 				<div className="folder-name"> 
+		// 					<label htmlFor="name"> Folder Name * </label>
+		// 					<input type="text" className="folderEntry"
+		// 					name="folderName" id="folderName" ref={this.folderEntryInput} />
+		// 					<button type="submit" className="newFolderAddButton" onClick={e => this.newFolder(e.target.calue)}> 
+		// 					Add to Folders
+		// 					</button>
+		// 					<button type="delete" className="newFolderCancel">
+		// 					Cancel Addition
+		// 					</button>
+		// 				</div>
+		// 			</form>
+		// 		</div>
+		// 	)
+	//	}
 }

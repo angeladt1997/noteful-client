@@ -40,13 +40,14 @@ export default class NoteListNav extends React.Component {
             <br />
             Folder
           </CircleButton>
-          <div className="NewFolderControl">
+          {/* <div className="NewFolderControl">
             <AddFolder
               tag='button'
               role='link'
               onClick={() => this.props.folders[].push()}
-            >
+            />
             </AddFolder>
+            </div> */}
         </div>
       </div>
     )

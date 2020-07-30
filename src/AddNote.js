@@ -29,6 +29,7 @@ class AddNote extends React.Component {
     this.setState({folder: {value: folder}});
   }
   handleSubmit(event) {
+    //fetch
     event.PreventDefault();
     const { name, content, folder } = this.state;
 
@@ -42,12 +43,19 @@ class AddNote extends React.Component {
       return 'Name is required';
     }
   }
+  getFolder=() => {
+    const {folders} = this.context;
+    return folders.map(folder => {
+      return(
+        <option value={folder.id}>{folder.name}</option>
+      )
+    })
+  }
   render() {
     const noteNameError = this.ValidateName();
-    const folderList= [];
 
     return(
-      <form className="new-note" action="https://www.notes.com" method="POST" onSubmit={e => this.handleSubmit(e)}>
+      <form className="new-note" onSubmit={e => this.handleSubmit(e)}>
           <h2>Add New Note</h2>
           <div className="note-name">
             <p>* required field</p>
@@ -74,11 +82,9 @@ class AddNote extends React.Component {
           <div className="note-folder">
           <label htmlFor="folder"></label>
           <select name="folders" id="folders" required>
-            <option value="folder1">Folder1</option>
-            <option value="folder2">Folder2</option>
-            <option value="folder3">Folder3</option>
-            <option value="folder4">Folder4</option>
-          </select>
+            {this.getFolder()}
+            </select>
+    ))
           </div>
 
       </form>
