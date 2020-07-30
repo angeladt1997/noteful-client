@@ -44,9 +44,10 @@ export default class NoteListNav extends React.Component {
             <AddFolder
               tag='button'
               role='link'
-              onClick={() => this.props.folders[].push()}
+              onClick={() => this.props.folders.push()}
             >
             </AddFolder>
+            </div>
         </div>
       </div>
     )
