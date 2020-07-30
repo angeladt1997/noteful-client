@@ -30,8 +30,14 @@ export default function NoteListMain(props) {
           <br />
           Note
         </CircleButton>
-      </div>
-    </section>
+        </div>
+        </section>   
+              
+              
+              //onClick show component <AddNote />}
+          
+     
+  
   )
 }
 
