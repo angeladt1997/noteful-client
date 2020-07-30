@@ -8,6 +8,7 @@ import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
+import AddNote from '../AddNote';
 
 class App extends Component {
     state = {
@@ -83,6 +84,14 @@ class App extends Component {
                         const {noteId} = routeProps.match.params;
                         const note = findNote(notes, noteId);
                         return <NotePageMain {...routeProps} note={note} />;
+                    }}
+                />
+                <Route
+                    path="/note/:add-note"
+                    render={routeProps => {
+                        const {noteId} = routeProps.match.params;
+                        const note = findNote(notes, noteId);
+                        return <AddNote {...routeProps} note={note} />;
                     }}
                 />
             </>

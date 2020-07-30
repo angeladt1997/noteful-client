@@ -34,7 +34,6 @@ export default function NoteListMain(props) {
         </section>   
               
               
-              //onClick show component <AddNote />}
           
      
   
