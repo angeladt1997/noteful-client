@@ -6,8 +6,8 @@
 
 import React from 'react';
 import './AddFolder.css';
-//import ReactDOM from 'react-dom'
-//import ApiContext from '../ApiContext';
+import config from '../config';
+import ApiContext from '../ApiContext';
 
 export default class AddFolder extends React.Component {
 	constructor(props) {
