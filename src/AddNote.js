@@ -14,7 +14,7 @@ class AddNote extends React.Component {
       content: {
         value: ''
       },
-      folder: {
+      folders: {
         value: '' /*dropdown list to be populated*/
       }
     };
@@ -52,7 +52,7 @@ class AddNote extends React.Component {
     })
   }
   render() {
-    const noteNameError = this.ValidateName();
+    const noteNameError = this.validateName();
 
     return(
       <form className="new-note" onSubmit={e => this.handleSubmit(e)}>

@@ -20,7 +20,7 @@ export default class AddFolder extends React.Component {
 			}
 		}
 
-		static contextType = ApiContext;
+	static contextType = ApiContext;
 
 		handleSubmit = (event) => {
 			event.preventDefault();

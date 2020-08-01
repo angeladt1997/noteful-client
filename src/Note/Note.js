@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ApiContext from '../ApiContext'
+//import ApiContext from '../ApiContext'
 import config from '../config'
 import './Note.css'
 
@@ -10,7 +10,7 @@ export default class Note extends React.Component {
   static defaultProps ={
     onDeleteNote: () => {},
   }
-  static contextType = ApiContext;
+ // static contextType = ApiContext;
 
   handleClickDelete = e => {
     e.preventDefault()
