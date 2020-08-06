@@ -2,7 +2,7 @@ import React from 'react';
 import './AddFolder.css';
 import config from '../config';
 import ApiContext from '../ApiContext';
-import ValidationError from '../ValidationError';
+//import ValidationError from './ValidationError';
 
 export default class AddFolder extends React.Component {
 	constructor(props) {
@@ -47,9 +47,9 @@ export default class AddFolder extends React.Component {
 
 		validateNewFolderName() {
 			const newFolderName = this.state.value.trim();
-			if(newFolder.length === 0) {
+			if(newFolderName.length === 0) {
 				return "Name me, please!";
-			} else if (name.length <3) {
+			} else if (newFolderName.length <3) {
 				return "I'd like a longer name!"
 			}
 
@@ -64,8 +64,8 @@ export default class AddFolder extends React.Component {
 						<div className="folder-name"> 
 							<label htmlFor="name"> Folder Name * </label>
 							<input type="text" className="folderEntry"
-							name="folderName" id="folderName" onChange={e => this.updateFolderName(e.target.value)} />
-							{this.state.folderInput.touched && (<ValidationError message={newFolderError} />)}
+							name="folderName" placeholder="Folder Name" id="folderName" onChange={e => this.updateFolderName(e.target.value)} />
+							{this.state.folderInput.touched}
 							<button type="submit" className="newFolderAddButton" onClick={e => this.newFolder(e.target.calue)}> 
 							Add to Folders
 							</button>

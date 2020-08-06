@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 
 
+
 class AddNote extends React.Component {
   //create AddNote component
   constructor(props) {
