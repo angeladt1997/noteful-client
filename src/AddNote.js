@@ -1,6 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types';
+import config from './config';
 
+import ApiContext from './ApiContext';
+import ValidationError from './ValidationError';
 
 class AddNote extends React.Component {
   //create AddNote component
@@ -14,11 +16,15 @@ class AddNote extends React.Component {
       content: {
         value: ''
       },
-      folders: {
+      folder: {
         value: '' /*dropdown list to be populated*/
-      }
+      },
+      error: ''
     };
   }
+  static contextType = ApiContext;
+
+
   updateName(name) {
     this.setState({ name: { value: name, touched: true } });
   }
@@ -30,30 +36,72 @@ class AddNote extends React.Component {
   }
   handleSubmit(event) {
     //fetch
-    event.PreventDefault();
+    event.preventDefault();
+
+    const nameIsValid = this.validateNameAndFolder();
+    if (!nameIsValid) {
+      return;
+    }
+
     const { name, content, folder } = this.state;
 
-    console.log('Name: ', name.value);
-    console.log('Content:', content.value);
-    console.log('Folder:', folder.value);
-  }
-  validateName() {
-    const noteName = this.state.name.value.trim();
-    if (noteName === 0) {
-      return 'Name is required';
+    const newNote = {
+      name: name.value,
+      content: content.value,
+      folderId: folder.value,
+      modified: new Date()
     }
+
+    fetch(`${config.API_ENDPOINT}/notes/`, {
+			method: 'POST',
+			body:JSON.stringify(newNote),
+			headers: {
+				'content-type': 'application/json'
+			},		
+		})
+			.then(res => {
+				if(!res.ok)
+					return res.json().then(e => Promise.reject(e))
+				return res.json()
+			})
+			.then((data) => {
+				this.context.addNote(data)
+				this.props.history.push(`/folder/`+data.folderId)
+			})
+			.catch(error => {
+				console.error({error})
+			})
+		
+  }
+  validateNameAndFolder() {
+    const { name, folder } = this.state;
+    if (name.value.trim().length === 0) {
+      this.setState({
+        error: 'Name is required'
+      });
+      return false;
+    }
+
+    if (folder.value.trim().length === 0) {
+      this.setState({
+        error: 'Please select a folder'
+      });
+      return false;
+    }
+
+
+
+    return true;
   }
   getFolder=() => {
     const {folders} = this.context;
     return folders.map(folder => {
       return(
-        <option value={folder.id}>{folder.name}</option>
+        <option value={folder.id} key={folder.id}>{folder.name}</option>
       )
     })
   }
   render() {
-    const noteNameError = this.validateName();
-
     return(
       <form className="new-note" onSubmit={e => this.handleSubmit(e)}>
           <h2>Add New Note</h2>
@@ -67,7 +115,7 @@ class AddNote extends React.Component {
               id="name"
               onChange={e => this.updateName(e.target.value)}
               />
-              {this.state.name.touched && noteNameError}
+              
           </div>
           <div className="note-content">
             <label htmlFor="content">Content</label>
@@ -80,13 +128,15 @@ class AddNote extends React.Component {
               />
           </div>
           <div className="note-folder">
-          <label htmlFor="folder"></label>
-          <select name="folders" id="folders" required>
+          <label htmlFor="folder">Select Folder*:</label>
+          <select name="folders" id="folders" onChange={(e) => this.updateFolder(e.target.value) }>
+            <option value=''>Select a folder</option>
             {this.getFolder()}
             </select>
-    ))
-          </div>
+            <button>Submit</button>
 
+            <ValidationError message={this.state.error} />
+          </div>
       </form>
     )
   }

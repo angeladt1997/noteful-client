@@ -16,6 +16,7 @@ export default class AddFolder extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state ={
+			error: '',
 			folderInput: {value: '', touched: false}
 			}
 		}
@@ -24,13 +25,30 @@ export default class AddFolder extends React.Component {
 
 		handleSubmit = (event) => {
 			event.preventDefault();
+
+
+			//validate the data first before processing it
+			let formIsValid = this.validateNewFolderName();
+
+			console.log('state error ', this.state.error);
+			if (!formIsValid) {
+				return;
+			}
+
+			console.log('FORM IS BEING SUBMITTED');
+
+
+
+
 			const {folderInput} = this.state;
 			const folder = { name: folderInput.value}
 
+			//const folder = { name: this.state.folderInput.value}
+
+
 			fetch(`${config.API_ENDPOINT}/folders/`, {
 			method: 'POST',
-			body:
-				 JSON.stringify(folder),
+			body:JSON.stringify(folder),
 			headers: {
 				'content-type': 'application/json'
 			},		
@@ -41,42 +59,50 @@ export default class AddFolder extends React.Component {
 				return res.json()
 			})
 			.then((data) => {
-				this.contect.AddFolder(data)
-				this.props.history.push(`/`)
+				this.context.addFolder(data)
+				this.props.history.push(`/folder/`+data.id)
 			})
 			.catch(error => {
 				console.error({error})
 			})
 		}
 		
-		updateFolderName(folderInput) {
-			this.setState({folderInput: {value: folderInput, touched: true}})
+		updateFolderName(e) {
+			this.setState({folderInput: {value: e.target.value, touched: true}})
 		}
 
-		validateNewFolderName() {
-			const newFolderName = this.state.value.trim();
+		validateNewFolderName = () => {
+			console.log('FORM IS BEING VALIDATED');
+			const newFolderName = this.state.folderInput.value.trim();
 			if(newFolderName.length === 0) {
-				return "Name me, please!";
+				this.setState({error: "Name me, please!"});
+				return false;
 			} else if (newFolderName.length <3) {
-				return "I'd like a longer name!"
+				this.setState({error: "I'd like a longer name!"});
+				return false;
 			}
+
+			this.setState({error: ""});
+			return true;
 
 		}
 
 		render() {
-			const newFolderError = this.validateNewFolderName();
+			//const newFolderError = this.validateNewFolderName;
 			return (
 				<div>
-					<h2>New Folder</h2>
+					<h2>Create New Folder</h2>
 					<form className="newFolder" onSubmit={e => this.handleSubmit(e)}>
 						<div className="folder-name"> 
 							<label htmlFor="name"> Folder Name * </label>
 							<input type="text" className="folderEntry"
-							name="folderName" id="folderName" onChange={e => this.updateFolderName(e.target.value)} />
-							{this.state.folderInput.touched && (<ValidationError message={newFolderError} />)}
-							<button type="submit" className="newFolderAddButton" onClick={e => this.newFolder(e.target.calue)}> 
+							name="folderName" id="folderName" onChange={e => this.updateFolderName(e)} />
+							
+							<button type="submit" className="newFolderAddButton"> 
 							Add to Folders
 							</button>
+
+							<ValidationError message={this.state.error} />
 						</div>
 					</form>
 				</div>
