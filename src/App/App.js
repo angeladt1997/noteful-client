@@ -8,6 +8,9 @@ import NotePageMain from '../NotePageMain/NotePageMain';
 import ApiContext from '../ApiContext';
 import config from '../config';
 import './App.css';
+import AddFolder from '../AddFolder/AddFolder';
+import AddNote from '../AddNote/AddNote';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary'
 
 class App extends Component {
     state = {
@@ -42,16 +45,30 @@ class App extends Component {
         });
     };
 
+    handleAddFolder = (newFolder) => {
+        const newFolders = [...this.state.folders]
+        newFolders.push(newFolder)
+        this.setState({folders: newFolders })
+    }
+
+    handleAddNote = (newNote) => {
+        const newNotes = [...this.state.notes];
+        newNotes.push(newNote);
+        this.setState({notes: newNotes});
+    }
+
+    validateName(){
+        const name = this.state.name.value.trim();
+        if(name.length===0){
+            return 'Name required'
+        }
+    }
+
     renderNavRoutes() {
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
-                    <Route
-                        exact
-                        key={path}
-                        path={path}
-                        component={NoteListNav}
-                    />
+                    <Route exact key={path} path={path} component={NoteListNav} />
                 ))}
                 <Route path="/note/:noteId" component={NotePageNav} />
                 <Route path="/add-folder" component={NotePageNav} />
@@ -64,14 +81,11 @@ class App extends Component {
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
-                    <Route
-                        exact
-                        key={path}
-                        path={path}
-                        component={NoteListMain}
-                    />
+                    <Route exact key={path} path={path} component={NoteListMain} />
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
+                <Route path="/add-folder" component={AddFolder} />
+                <Route path="/add-note" component={AddNote} />
             </>
         );
     }
@@ -80,19 +94,22 @@ class App extends Component {
         const value = {
             notes: this.state.notes,
             folders: this.state.folders,
-            deleteNote: this.handleDeleteNote
+            deleteNote: this.handleDeleteNote,
+            addFolder: this.handleAddFolder,
+            addNote: this.handleAddNote,
+            validateName: this.validateName
         };
         return (
             <ApiContext.Provider value={value}>
                 <div className="App">
-                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                    <nav className="App__nav"><ErrorBoundary>{this.renderNavRoutes()}</ErrorBoundary></nav>
                     <header className="App__header">
                         <h1>
                             <Link to="/">Noteful</Link>{' '}
                             <FontAwesomeIcon icon="check-double" />
                         </h1>
                     </header>
-                    <main className="App__main">{this.renderMainRoutes()}</main>
+                    <main className="App__main"><ErrorBoundary>{this.renderMainRoutes()}</ErrorBoundary></main>
                 </div>
             </ApiContext.Provider>
         );
